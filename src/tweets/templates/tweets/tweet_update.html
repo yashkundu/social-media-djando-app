@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Tweet | {{block.super}}{% endblock %}
+
+
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-sm-8">
+      {% include 'tweets/tweet_form.html' with form=form btn_title='Update'%}
+    </div>
+  </div>
+{% endblock %}
