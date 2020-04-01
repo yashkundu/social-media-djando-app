@@ -11,6 +11,8 @@ from django.urls import reverse_lazy
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+from django.db.models import Q
+
 
 class TweetDetailView(DetailView):
     model = Tweet
@@ -18,6 +20,20 @@ class TweetDetailView(DetailView):
 
 class TweetListView(LoginRequiredMixin, ListView):
     model = Tweet
+
+    def get_queryset(self, *args, **kwargs):
+        user = self.request.user
+        qs = Tweet.objects.filter(Q(user__in=user.profile.following.all()) | Q(user=user)).distinct().order_by('-timestamp')
+        q = self.request.GET.get('q',  None)
+        if q is not None:
+            qs = qs.filter(Q(content__icontains=q) | Q(user__username__icontains=q))
+        return qs
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(TweetListView, self).get_context_data(*args, **kwargs)
+        context['form'] = TweetForm()
+        context['url'] = reverse_lazy('tweets:create')
+        return context
 
 
 class TweetCreateView(LoginRequiredMixin, UserAttachedMixin, CreateView):
@@ -29,7 +45,7 @@ class TweetUpdateView(LoginRequiredMixin, UserNeededMixin, UpdateView):
     form_class = TweetForm
     template_name = 'tweets/tweet_update.html'
     queryset = Tweet.objects.all()
-    
+
 
 class TweetDeleteView(LoginRequiredMixin, UserNeededMixin, DeleteView):
     model = Tweet

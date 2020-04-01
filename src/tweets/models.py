@@ -12,3 +12,6 @@ class Tweet(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy('tweets:detail', kwargs={'pk': self.pk})
+
+    class Meta:
+        ordering = ['-timestamp']

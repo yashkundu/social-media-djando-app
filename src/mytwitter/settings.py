@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     #custom apps
     'crispy_forms',
+    'rest_framework',
     'tweets',
     'accounts',
 ]
