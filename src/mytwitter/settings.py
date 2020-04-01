@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     #custom apps
     'crispy_forms',
     'tweets',
+    'accounts',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+
+{% block title %}{{object}} | {{block.super}}{% endblock %}
+
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-3">
+      <h1>{{object.username}}</h1>
+      <hr>
+      <p>Followers : {{object.followers.all.count}}</p>
+      {% if object != request.user %}
+      <p><a class="btn btn-link" href="{{object.profile.get_follow_url}}">{% if is_following %}UnFollow{% else %}Follow{% endif %}</a></p>
+      {% endif %}
+      <hr>
+      <h3>Following : <small>{{ object.profile.get_following.count }}</small></h3>
+        {% for user in object.profile.get_following.all %}
+          <a class="btn btn-link" href="{{ user.profile.get_absolute_url }}">{{ user.username }}</a><br>
+        {% empty %}
+          <h5>Not following any user.</h5>
+        {% endfor %}
+        <hr>
+
+        <h3>Followers : </h3>
+          {% for profile in object.followers.all %}
+            <a class="btn btn-link" href="{{ profile.get_absolute_url }}">{{ profile.user.username }}</a><br>
+          {% empty %}
+            <h5>The user has no followers.</h5>
+          {% endfor %}
+          <hr>
+    </div>
+
+    <div class="col-sm-9">
+      <ul class="list-unstyled">
+        {% for tweet in object.tweets.all %}
+          <li class="media">
+            <div class="media-body">
+              <p>
+                  {{tweet.content}}<br>
+                  via {{tweet.user}} | {{tweet.timestamp}} | <a href="{% url 'tweets:detail' pk=tweet.pk %}">View</a>
+              </p><hr>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+
+    </div>
+  </div>
+{% endblock %}
