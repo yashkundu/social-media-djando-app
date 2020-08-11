@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404, redirect
 
 from .models import Tweet
 
 from django.views.generic import DetailView, ListView, CreateView, UpdateView,DeleteView
-
+from django.views import View
 from .forms import TweetForm
 from .mixins import UserAttachedMixin, UserNeededMixin
 
@@ -12,6 +12,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.db.models import Q
+
+
+class RetweetView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        tweet = get_object_or_404(Tweet, pk=pk)
+        retweet = Tweet.objects.retweet(request.user, tweet)
+        return redirect('/')
 
 
 class TweetDetailView(DetailView):

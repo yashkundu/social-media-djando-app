@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Hashtag | {{block.super}}{% endblock %}
+
+
+{% block content %}
+  <div class="row">
+    <div class="col-sm-3">
+      <h1>{{ hashtag.tag }}</h1>
+    </div>
+    <div class="col-sm-9">
+      <ul class="list-unstyled">
+      {% for object in hashtag.get_tweets %}
+      <li class="media">
+        <div class="media-body">
+          <p>{{ object.content }}<br>
+          via <a href="{{ object.user.profile.get_absolute_url }}">{{object.user}}</a> | {{object.timestamp}}</p>
+          <hr>
+        </div>
+      </li>
+      {% endfor %}
+    </ul>
+    </div>
+  </div>
+{% endblock %}

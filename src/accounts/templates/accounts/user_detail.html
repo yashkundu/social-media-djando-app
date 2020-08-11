@@ -3,6 +3,14 @@
 
 {% block title %}{{object}} | {{block.super}}{% endblock %}
 
+{% block script %}
+<script>
+$(document).ready(function(event){
+  loadTweetContainer('tweet-container')
+})
+</script>
+{% endblock %}
+
 
 {% block content %}
   <div class="row">
@@ -32,17 +40,14 @@
     </div>
 
     <div class="col-sm-9">
+      <h2>Tweets</h2>
       <ul class="list-unstyled">
-        {% for tweet in object.tweets.all %}
-          <li class="media">
-            <div class="media-body">
-              <p>
-                  {{tweet.content}}<br>
-                  via {{tweet.user}} | {{tweet.timestamp}} | <a href="{% url 'tweets:detail' pk=tweet.pk %}">View</a>
-              </p><hr>
-            </div>
-          </li>
-        {% endfor %}
+        <div id="tweet-container" data-url='/api/accounts/{{object.username}}/tweets/'>
+
+        </div>
+        <a class="btn btn-link" href="#" id="loadmore">Load More Tweets</a>
+
+
       </ul>
 
     </div>
